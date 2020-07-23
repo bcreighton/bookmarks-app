@@ -5,6 +5,7 @@ import config from '../config';
 import './BookmarkItem.css';
 
 function deleteBookmarkRequest(bookmarkId, cb) {
+  debugger;
   fetch(config.API_ENDPOINT + `/${bookmarkId}`, {
     method: 'DELETE',
     headers: {
@@ -24,7 +25,7 @@ function deleteBookmarkRequest(bookmarkId, cb) {
     })
     .then(data => {
       console.log({ data })
-      cb(bookmarkId)
+      return cb(bookmarkId)
     })
     .catch(error => {
       console.log(error)
@@ -70,5 +71,5 @@ export default function BookmarkItem(props) {
 }
 
 BookmarkItem.defaultProps = {
-  onClickDelete: () => {},
+  onClickDelete: () => { },
 }
