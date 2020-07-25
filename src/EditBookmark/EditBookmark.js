@@ -34,14 +34,14 @@ class EditBookmark extends Component {
     this.setState({ rating: e.target.value })
   }
 
-  handleSubmit = () => {
+  handleSubmit = (e) => {
     e.preventDefault()
 
     const { bookmarkId } = this.props.match.params
     const { id, title, url, description, rating } = this.state
     const newBookmark = { id, title, url, description, rating }
 
-    fetch(confg.API_ENDPOINT + `/${bookmarkId}`, {
+    fetch(config.API_ENDPOINT + `/${bookmarkId}`, {
       method: 'PATCH',
       body: JSON.stringify(newBookmark),
       headers: {
@@ -53,6 +53,28 @@ class EditBookmark extends Component {
         if (!res.ok)
           return res.json().then(error => Promise.reject(error))
       })
+      .then(() => {
+        this.resetFields(newBookmark)
+        this.context.updateBookmark(newBookmark)
+        this.props.history.push('/')
+      })
+      .catch(error => {
+        this.setState({error})
+      })
+  }
+
+  resetFields = (newFields) => {
+    this.setState({
+      id: newFields.id || '',
+      title: newFields.title || '',
+      url: newFields.url || '',
+      description: newFields.description || '',
+      rating: newFields.rating || '',
+    })
+  }
+
+  handleClickCancel = () => {
+    this.props.history.push('/')
   }
 
   componentDidMount() {
@@ -87,7 +109,7 @@ class EditBookmark extends Component {
 
 
   render() {
-    const { error } = this.state
+    const { error, title, url, description, rating } = this.state
 
     return (
       <section className='EditBookmark'>
@@ -99,6 +121,11 @@ class EditBookmark extends Component {
           <div className='EditBookmark_error' role='alert'>
             {error && <p>{error.message}</p>}
           </div>
+
+          <input
+            type='hidden'
+            name='id'
+          />
 
           <div>
             <label htmlFor='title'>
@@ -112,7 +139,7 @@ class EditBookmark extends Component {
               name='title'
               placeholder='Great website'
               required
-              // value={title}
+              value={title}
               onChange={this.handleChangeTitle}
             />
           </div>
@@ -129,7 +156,7 @@ class EditBookmark extends Component {
               name='url'
               placeholder='https://www.great-website.com/'
               required
-              // value={url}
+              value={url}
               onChange={this.handleChangeUrl}
             />
           </div>
@@ -142,7 +169,7 @@ class EditBookmark extends Component {
             <textArea
               id='description'
               name='description'
-              // value={description}
+              value={description}
               onChange={this.handleChangeDescription}
             />
           </div>
@@ -159,7 +186,7 @@ class EditBookmark extends Component {
               min='1'
               max='5'
               required
-              // defaultValue={rating}
+              value={rating}
               onChange={this.handleChangeRating}
             />
           </div>
