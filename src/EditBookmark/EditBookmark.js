@@ -59,7 +59,7 @@ class EditBookmark extends Component {
         this.props.history.push('/')
       })
       .catch(error => {
-        this.setState({error})
+        this.setState({ error })
       })
   }
 
@@ -80,7 +80,7 @@ class EditBookmark extends Component {
   componentDidMount() {
     const bookmarkId = this.props.match.params.bookmarkId
 
-    fetch(config.API_ENDPOINT + `${bookmarkId}`, {
+    fetch(config.API_ENDPOINT + `/${bookmarkId}`, {
       method: 'GET',
       headers: {
         'authorization': `Bearer ${config.API_KEY}`
